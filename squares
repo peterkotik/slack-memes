@@ -10,6 +10,10 @@ step_up_down = lambda i, len: len - abs(i - len + 1) - 1
 get_index = lambda i, j, len: min(step_up_down(j, len), step_up_down(i, len))
 
 def main():
+	just_args = list(sys.argv)
+	just_args.del(0)
+	for arg in just_args[:]:
+		
 	num_strings = len(sys.argv) - 1
 	grid_len = 2 * num_strings - 1
 	for j in range(0, grid_len):
