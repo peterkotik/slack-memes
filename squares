@@ -1,0 +1,25 @@
+#!/usr/bin/python
+
+import os
+import sys
+
+wrap_with_colon = lambda string: ":{}:".format(string)
+
+step_up_down = lambda i, len: len - abs(i - len + 1) - 1
+
+get_index = lambda i, j, len: min(step_up_down(j, len), step_up_down(i, len))
+
+def main():
+	num_strings = len(sys.argv) - 1
+	grid_len = 2 * num_strings - 1
+	for j in range(0, grid_len):
+		line = ''
+		for i in range(0, grid_len):
+			arg_num = get_index(i, j, num_strings) + 1
+			text = wrap_with_colon(sys.argv[arg_num])
+			line += text
+		print(line)
+
+
+if __name__ == "__main__":
+	main()
