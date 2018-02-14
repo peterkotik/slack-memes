@@ -9,17 +9,57 @@ step_up_down = lambda i, len: len - abs(i - len + 1) - 1
 
 get_index = lambda i, j, len: min(step_up_down(j, len), step_up_down(i, len))
 
+FRAME_TOP_LEFT = wrap_with_colon('frame-top-left')
+FRAME_TOP_MIDDLE = wrap_with_colon('frame-top-middle')
+FRAME_TOP_RIGHT = wrap_with_colon('frame-top-right')
+FRAME_VERTICAL_LEFT = wrap_with_colon('frame-vertical-left')
+FRAME_VERTICAL_RIGHT = wrap_with_colon('frame-vertical-right')
+FRAME_BOTTOM_LEFT = wrap_with_colon('frame-bottom-left')
+FRAME_BOTTOM_MIDDLE = wrap_with_colon('frame-bottom-middle')
+FRAME_BOTTOM_RIGHT = wrap_with_colon('frame-bottom-right')
+
+class Options:
+	def __init__(self, add_frame):
+		self.add_frame = add_frame
+
 def main():
-	num_strings = len(sys.argv) - 1
+	options = Options(False)
+	just_args = list(sys.argv)
+	del just_args[0]
+	for arg in just_args[:]:
+		if (arg.startswith('-')):
+			options = process_flag(arg, options)
+			just_args.remove(arg)
+	num_strings = len(just_args)
 	grid_len = 2 * num_strings - 1
+	if options.add_frame:
+		line = ''
+		for i in range(0, grid_len):
+			line += FRAME_TOP_MIDDLE
+		line = FRAME_TOP_LEFT + line + FRAME_TOP_RIGHT
+		print(line)
+
 	for j in range(0, grid_len):
 		line = ''
 		for i in range(0, grid_len):
-			arg_num = get_index(i, j, num_strings) + 1
-			text = wrap_with_colon(sys.argv[arg_num])
+			arg_num = get_index(i, j, num_strings)
+			text = wrap_with_colon(just_args[arg_num])
 			line += text
+		if options.add_frame:
+			line = FRAME_VERTICAL_LEFT + line + FRAME_VERTICAL_RIGHT
 		print(line)
 
+	if options.add_frame:
+		line = ''
+		for i in range(0, grid_len):
+			line += FRAME_BOTTOM_MIDDLE
+		line = FRAME_BOTTOM_LEFT + line + FRAME_BOTTOM_RIGHT
+		print(line)
+
+def process_flag(flag, options):
+	if flag == '-f':
+		options.add_frame = True
+	return options
 
 if __name__ == "__main__":
 	main()
